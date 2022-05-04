@@ -2519,14 +2519,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://kitchencountertop/meshes/KitchenCountertop.obj</uri>
+              <uri>model://KitchenCountertop/meshes/KitchenCountertop.obj</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://kitchencountertop/meshes/KitchenCountertop.obj</uri>
+              <uri>model://KitchenCountertop/meshes/KitchenCountertop.obj</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>

@@ -1,0 +1,14 @@
+t3_lazy_couch_potato_v0: #namespace
+  linear_forward_speed: 0.1
+  linear_turn_speed: 0.1
+  angular_speed: 0.1
+  init_linear_forward_speed: 0.1
+  init_linear_turn_speed: 0.0
+  new_ranges: 2
+  min_range: 0
+  max_laser_value: 3.5
+  min_laser_value: 0
+  max_linear_aceleration: 1
+  forwards_reward: 0
+  turn_reward: 0
+  end_episode_points: 1

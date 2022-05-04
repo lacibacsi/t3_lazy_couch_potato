@@ -1,4 +1,4 @@
-t3_lazy_couch_potato_v0: namespace
+t3_lazy_couch_potato_v0: #namespace
   n_actions: 4
   control_type: "velocity"
   

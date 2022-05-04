@@ -9,21 +9,29 @@
 import rospy
 import numpy
 from gym import spaces
-from openai_ros.robot_envs import turtlebot3_env
+#from openai_ros.robot_envs import turtlebot3_env
+from TurtleBot3Env import TurtleBot3Env
 from gym.envs.registration import register
 from geometry_msgs.msg import Vector3
 
 # The path is __init__.py of openai_ros, where we import the TurtleBot2MazeEnv directly
 timestep_limit_per_episode = 10000  # Can be any Value
 
+'''
 register(
-    id='TurtleBot3World-v0',
+    id='TurtleBot3Lds-v0',
     entry_point='openai_ros.task_envs.turtlebot3.turtlebot3_world:TurtleBot3WorldEnv',
+    timestep_limit=timestep_limit_per_episode,
+)
+'''
+register(
+    id='TurtleBot3Lds-v0',
+    entry_point='turtlebot3_world:TurtleBot3WorldEnv',
     timestep_limit=timestep_limit_per_episode,
 )
 
 
-class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
+class TurtleBot3WorldEnv(TurtleBot3Env):
     def __init__(self):
         """
         This Task Env is designed for having the TurtleBot3 in the turtlebot3 world
@@ -32,7 +40,7 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
         """
 
         # Only variable needed to be set here
-        number_actions = rospy.get_param('/turtlebot3/n_actions')
+        number_actions = rospy.get_param('/t3_lazy_couch_potato_v0/n_actions')
         self.action_space = spaces.Discrete(number_actions)
 
         # We set the reward range, which is not compulsory but here we do it.
@@ -53,21 +61,25 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
 
         # Actions and Observations
         self.linear_forward_speed = rospy.get_param(
-            '/turtlebot3/linear_forward_speed')
+            '/t3_lazy_couch_potato_v0/linear_forward_speed')
         self.linear_turn_speed = rospy.get_param(
-            '/turtlebot3/linear_turn_speed')
-        self.angular_speed = rospy.get_param('/turtlebot3/angular_speed')
+            '/t3_lazy_couch_potato_v0/linear_turn_speed')
+        self.angular_speed = rospy.get_param(
+            '/t3_lazy_couch_potato_v0/angular_speed')
         self.init_linear_forward_speed = rospy.get_param(
-            '/turtlebot3/init_linear_forward_speed')
+            '/t3_lazy_couch_potato_v0/init_linear_forward_speed')
         self.init_linear_turn_speed = rospy.get_param(
-            '/turtlebot3/init_linear_turn_speed')
+            '/t3_lazy_couch_potato_v0/init_linear_turn_speed')
 
-        self.new_ranges = rospy.get_param('/turtlebot3/new_ranges')
-        self.min_range = rospy.get_param('/turtlebot3/min_range')
-        self.max_laser_value = rospy.get_param('/turtlebot3/max_laser_value')
-        self.min_laser_value = rospy.get_param('/turtlebot3/min_laser_value')
+        self.new_ranges = rospy.get_param(
+            '/t3_lazy_couch_potato_v0/new_ranges')
+        self.min_range = rospy.get_param('/t3_lazy_couch_potato_v0/min_range')
+        self.max_laser_value = rospy.get_param(
+            '/t3_lazy_couch_potato_v0/max_laser_value')
+        self.min_laser_value = rospy.get_param(
+            '/t3_lazy_couch_potato_v0/min_laser_value')
         self.max_linear_aceleration = rospy.get_param(
-            '/turtlebot3/max_linear_aceleration')
+            '/t3_lazy_couch_potato_v0/max_linear_aceleration')
 
         # We create two arrays based on the binary values that will be assigned
         # In the discretization method.
@@ -84,10 +96,12 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
                        str(self.observation_space))
 
         # Rewards
-        self.forwards_reward = rospy.get_param("/turtlebot3/forwards_reward")
-        self.turn_reward = rospy.get_param("/turtlebot3/turn_reward")
+        self.forwards_reward = rospy.get_param(
+            "/t3_lazy_couch_potato_v0/forwards_reward")
+        self.turn_reward = rospy.get_param(
+            "/t3_lazy_couch_potato_v0/turn_reward")
         self.end_episode_points = rospy.get_param(
-            "/turtlebot3/end_episode_points")
+            "/t3_lazy_couch_potato_v0/end_episode_points")
 
         self.cumulated_steps = 0.0
 

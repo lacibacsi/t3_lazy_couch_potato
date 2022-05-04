@@ -1,5 +1,6 @@
 <launch>
     <rosparam command="load" file="$(find t3_lazy_couch_potato)/config/qlearn_params.yaml" />
+    <rosparam command="load" file="$(find t3_lazy_couch_potato)/config/t3_params.yaml" />
     <!-- Launch the training system -->
-    <node pkg="t3_lazy_couch_potato" name="t3_training" type="start_training.py" output="screen"/> -->
+    <node pkg="t3_lazy_couch_potato" name="t3_training" type="start_training_qlearn.py" output="screen"/> -->
 </launch>

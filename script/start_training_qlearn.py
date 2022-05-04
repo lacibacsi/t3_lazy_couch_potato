@@ -22,7 +22,7 @@ if __name__ == '__main__':
     rospy.init_node('cartpole_gym', anonymous=True, log_level=rospy.WARN)
 
     # Create the Gym environment
-    env = gym.make('TurtleBot3World-v0')
+    env = gym.make('TurtleBot3Lds-v0')
     rospy.loginfo("Gym environment done")
 
     # Set the logging system

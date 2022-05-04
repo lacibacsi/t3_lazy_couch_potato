@@ -2015,14 +2015,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://sofa/meshes/Sofa.obj</uri>
+              <uri>model://Sofa/meshes/Sofa.obj</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://sofa//meshes/Sofa.obj</uri>
+              <uri>model://Sofa//meshes/Sofa.obj</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2064,14 +2064,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://tvstand/meshes/TVStand.obj</uri>
+              <uri>model://TVStand/meshes/TVStand.obj</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://tvstand/meshes/TVStand_Col.obj</uri>
+              <uri>model://TVStand/meshes/TVStand_Col.obj</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2409,14 +2409,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://fridge/meshes/Fridge.obj</uri>
+              <uri>model://Fridge/meshes/Fridge.obj</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://fridge/meshes/Fridge_Col.obj</uri>
+              <uri>model://Fridge/meshes/Fridge_Col.obj</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2446,14 +2446,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://malevisitorsit/meshes/MaleVisitorSit.obj</uri>
+              <uri>model://MaleVisitorSit/meshes/MaleVisitorSit.obj</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://malevisitorsit/meshes/MaleVisitorSit_Col.obj</uri>
+              <uri>model://MaleVisitorSit/meshes/MaleVisitorSit_Col.obj</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2483,14 +2483,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://femalevisitorsit/meshes/FemaleVisitorSit.obj</uri>
+              <uri>model://FemaleVisitorSit/meshes/FemaleVisitorSit.obj</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://femalevisitorsit/meshes/FemaleVisitorSit_Col.obj</uri>
+              <uri>model://FemaleVisitorSit/meshes/FemaleVisitorSit_Col.obj</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>

@@ -240,6 +240,16 @@ class T3LazyRobotEnv(robot_gazebo_env.RobotGazeboEnv):
 
         return crashed
 
+    def _closest_obstacle(self):
+        '''
+            returns the closest obstacle - to be used in reward function
+
+            Input:  none
+            Output: distance to closest obstacle, Float
+        '''
+        r = self.get_laser_scan()
+        return r.min()
+
     # Methods that the Training Environment will need
     # some of them are defined here as 'virtual'
     # because they will be used in RobotGazeboEnv parent class and defined in the
@@ -293,10 +303,10 @@ class T3LazyRobotEnv(robot_gazebo_env.RobotGazeboEnv):
             :param angular_speed: Speed of the angular turning of the robot base frame
             :param epsilon: Acceptable difference between the speed asked and the odometry readings
             :param update_rate: Rate at which we check the odometry.
-            
+
             # v1.0 - no waiting for the odometry, we assume it is ok...
         '''
-        cmd = CreateTwist(linear_speed, angular_speed)
+        cmd = helper_methods.CreateTwist(linear_speed, angular_speed)
 
         # TODO: this may be very unnecessary -> a try catch should suffice
         # self._check_publishers_connection()

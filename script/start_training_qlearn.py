@@ -19,7 +19,7 @@ from turtlebot3_world import TurtleBot3WorldEnv
 
 if __name__ == '__main__':
 
-    rospy.init_node('cartpole_gym', anonymous=True, log_level=rospy.WARN)
+    rospy.init_node('t3_gym', anonymous=True, log_level=rospy.WARN)
 
     # Create the Gym environment
     env = gym.make('TurtleBot3Lds-v0')

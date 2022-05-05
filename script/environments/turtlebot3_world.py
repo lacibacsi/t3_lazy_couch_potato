@@ -2,17 +2,19 @@
 
 '''
     LK
-    Turtlebot 3 environment file from OpenAI
+    Turtlebot 3 Task environment file from OpenAI
     source: https://bitbucket.org/theconstructcore/openai_ros
 '''
 
 import rospy
 import numpy
 from gym import spaces
-#from openai_ros.robot_envs import turtlebot3_env
-from TurtleBot3Env import TurtleBot3Env
+
 from gym.envs.registration import register
 from geometry_msgs.msg import Vector3
+
+#from openai_ros.robot_envs import turtlebot3_env
+from TurtleBot3Env import TurtleBot3Env
 
 # The path is __init__.py of openai_ros, where we import the TurtleBot2MazeEnv directly
 timestep_limit_per_episode = 10000  # Can be any Value

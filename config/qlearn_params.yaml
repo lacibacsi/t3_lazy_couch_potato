@@ -12,8 +12,8 @@ t3_lazy_couch_potato_v0: #namespace
   gamma: 0.9
   epsilon: 0.1
   epsilon_discount: 0.999
-  nepisodes: 1000
-  nsteps: 1000
+  nepisodes: 5 #1000
+  nsteps: 10 #1000
   number_splits: 10 #set to change the number of state splits for the continuous problem and also the number of env_variable splits
 
   init_pos: 0.0 # Position in which the base will start

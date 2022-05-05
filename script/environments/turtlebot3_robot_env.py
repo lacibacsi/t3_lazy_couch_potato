@@ -22,17 +22,15 @@ from geometry_msgs.msg import Twist
 
 
 class TurtleBot3Env(robot_gazebo_env.RobotGazeboEnv):
-    """Superclass for all CubeSingleDisk environments.
-    """
 
     def __init__(self):
-        """
+        '''
         Initializes a new TurtleBot3Env environment.
         TurtleBot3 doesnt use controller_manager, therefore we wont reset the 
         controllers in the standard fashion. For the moment we wont reset them.
 
         To check any topic we need to have the simulations running, we need to do two things:
-        1) Unpause the simulation: without that th stream of data doesnt flow. This is for simulations
+        1) Unpause the simulation: without that the stream of data doesnt flow. This is for simulations
         that are paused for whatever the reason
         2) If the simulation was running already for some reason, we need to reset the controllers.
         This has to do with the fact that some plugins with tf, dont understand the reset of the simulation
@@ -48,13 +46,10 @@ class TurtleBot3Env(robot_gazebo_env.RobotGazeboEnv):
         Actuators Topic List: /cmd_vel, 
 
         Args:
-        """
+        '''
         rospy.logdebug("Start TurtleBot3Env INIT...")
-        # Variables that we give through the constructor.
-        # None in this case
 
-        # Internal Vars
-        # Doesnt have any accesibles
+        # list of controllers to pass to the gazebo env - Turtlebot3 does not use any
         self.controllers_list = []
 
         # It doesnt use namespace
@@ -75,6 +70,8 @@ class TurtleBot3Env(robot_gazebo_env.RobotGazeboEnv):
         rospy.Subscriber("/imu", Imu, self._imu_callback)
         rospy.Subscriber("/scan", LaserScan, self._laser_scan_callback)
 
+        # queue size set to 1 as only the latest message is relevant.
+        # If for whatever reason a message is lost, a new one will quicky be sent with an updated value anyway
         self._cmd_vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
         self._check_publishers_connection()
@@ -87,14 +84,14 @@ class TurtleBot3Env(robot_gazebo_env.RobotGazeboEnv):
     # ----------------------------
 
     def _check_all_systems_ready(self):
-        """
-        Checks that all the sensors, publishers and other simulation systems are
-        operational.
-        """
+        '''
+            Checks that all the sensors, publishers and other simulation systems are
+            operational.
+        '''
         self._check_all_sensors_ready()
         return True
 
-    # CubeSingleDiskEnv virtual methods
+    # TurtleBot3Env virtual methods
     # ----------------------------
 
     def _check_all_sensors_ready(self):
@@ -157,11 +154,13 @@ class TurtleBot3Env(robot_gazebo_env.RobotGazeboEnv):
         self.laser_scan = data
 
     def _check_publishers_connection(self):
-        """
-        Checks that all the publishers are working
-        :return:
-        """
-        rate = rospy.Rate(10)  # 10hz
+        '''
+            Checks that all the publishers are working
+            :return:
+        '''
+        rate = rospy.Rate(
+            10)  # 10hz -> if changing this make sure to change the queue_size when publishing to cmd_vel
+
         while self._cmd_vel_pub.get_num_connections() == 0 and not rospy.is_shutdown():
             rospy.logdebug(
                 "No susbribers to _cmd_vel_pub yet so we wait and try again")
@@ -174,70 +173,78 @@ class TurtleBot3Env(robot_gazebo_env.RobotGazeboEnv):
 
         rospy.logdebug("All Publishers READY")
 
-    # Methods that the TrainingEnvironment will need to define here as virtual
-    # because they will be used in RobotGazeboEnv GrandParentClass and defined in the
+    # Methods that the Training Environment will need to define here as virtual
+    # because they will be used in RobotGazeboEnv parent class and defined in the
     # TrainingEnvironment.
+    # so the below definitions are essentially a list of pass-through defintions for virtual methods
     # ----------------------------
     def _set_init_pose(self):
-        """Sets the Robot in its init pose
-        """
+        '''
+            Sets the Robot in its init pose
+        '''
         raise NotImplementedError()
 
     def _init_env_variables(self):
-        """Inits variables needed to be initialised each time we reset at the start
-        of an episode.
-        """
+        '''
+            Inits variables needed to be initialised each time we reset at the start of an episode.
+        '''
         raise NotImplementedError()
 
     def _compute_reward(self, observations, done):
-        """Calculates the reward to give based on the observations given.
-        """
+        '''
+            Calculates the reward to give based on the observations given.
+        '''
         raise NotImplementedError()
 
     def _set_action(self, action):
-        """Applies the given action to the simulation.
-        """
+        '''
+            Applies the given action to the simulation.
+        '''
         raise NotImplementedError()
 
     def _get_obs(self):
         raise NotImplementedError()
 
     def _is_done(self, observations):
-        """Checks if episode done based on observations given.
-        """
+        '''
+            Checks if episode done based on observations given.
+        '''
         raise NotImplementedError()
 
     # Methods that the TrainingEnvironment will need.
     # ----------------------------
     def move_base(self, linear_speed, angular_speed, epsilon=0.05, update_rate=10):
-        """
-        It will move the base based on the linear and angular speeds given.
-        It will wait untill those twists are achived reading from the odometry topic.
-        :param linear_speed: Speed in the X axis of the robot base frame
-        :param angular_speed: Speed of the angular turning of the robot base frame
-        :param epsilon: Acceptable difference between the speed asked and the odometry readings
-        :param update_rate: Rate at which we check the odometry.
-        :return: 
-        """
+        '''
+            It will move the base based on the linear and angular speeds given.
+            It will wait untill those twists are achived reading from the odometry topic.
+            :param linear_speed: Speed in the X axis of the robot base frame
+            :param angular_speed: Speed of the angular turning of the robot base frame
+            :param epsilon: Acceptable difference between the speed asked and the odometry readings
+            :param update_rate: Rate at which we check the odometry.
+            :return: 
+        '''
         cmd_vel_value = Twist()
         cmd_vel_value.linear.x = linear_speed
         cmd_vel_value.angular.z = angular_speed
         rospy.logdebug("TurtleBot3 Base Twist Cmd>>" + str(cmd_vel_value))
+
+        # TODO: this may be very unnecessary -> a try catch should suffice
         self._check_publishers_connection()
+
         self._cmd_vel_pub.publish(cmd_vel_value)
         self.wait_until_twist_achieved(cmd_vel_value,
                                        epsilon,
                                        update_rate)
 
     def wait_until_twist_achieved(self, cmd_vel_value, epsilon, update_rate):
-        """
-        We wait for the cmd_vel twist given to be reached by the robot reading
-        from the odometry.
-        :param cmd_vel_value: Twist we want to wait to reach.
-        :param epsilon: Error acceptable in odometry readings.
-        :param update_rate: Rate at which we check the odometry.
-        :return:
-        """
+        '''
+            We wait for the cmd_vel twist given to be reached by the robot reading
+            from the odometry.
+            :param cmd_vel_value: Twist we want to wait to reach.
+            :param epsilon: Error acceptable in odometry readings.
+            :param update_rate: Rate at which we check the odometry.
+            :return:
+        '''
         rospy.logdebug("START wait_until_twist_achieved...")
 
         rate = rospy.Rate(update_rate)

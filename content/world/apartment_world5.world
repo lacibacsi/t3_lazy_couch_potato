@@ -1189,7 +1189,7 @@
         <pose>-4.09708 2.27024 0.741041 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='body'>
-          <pose>-4.09708 2.27024 0.741041 0 -0 0</pose>
+          <pose>-4.09708 2.37024 0.741041 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>

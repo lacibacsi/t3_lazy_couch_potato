@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-
+import numpy as np
 import rospy
 from gym.envs.registration import register
 from gym import spaces

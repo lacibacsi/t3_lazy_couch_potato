@@ -5,6 +5,7 @@
 #import rospy
 from math import sqrt
 import numpy as np
+import rospy
 from geometry_msgs.msg import Twist
 
 
@@ -48,9 +49,9 @@ def MeanOfArraysTwoEnd(nparray, slice_size):
 
         Output: the mean of the beginning and end of the array - no check is applied on the size of the slice vs the size of the array        
     '''
-    np_size = nparray.size()
-    concated = np.concatenate(np.sum(nparray[0:slice_size]), np.sum(
-        nparray[np_size - slice_size:np_size]))
+    np_size = nparray.size
+    concatenated = np.concatenate(
+        (nparray[0:slice_size], nparray[np_size - slice_size:np_size]))
 
     # Note: no check on dimension -> this method only works for one-dimensional array
-    return np.mean(concated)[0]
+    return np.mean(concatenated)

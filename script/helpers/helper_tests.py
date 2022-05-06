@@ -12,8 +12,8 @@ class HelperTests(unittest.TestCase):
             Testing mean calculation of numpy array slicing
             The meathod is used in LIDAR mean obstalce distance calculation
         '''
-        values = [2, 3, 4, 0, 0, 0, 0, 0, 2, 3, 4]
+        values = [2, 3, 4, 0, 0, 0, 0, 0, 4, 6, 8]
         nparray = np.array(values)
         print(nparray)
-        mean = helper_methods.MeanOfArraysTwoEnd(nparray, 3)
-        self.assertEqual(3.0, mean)
+        mean = helper.MeanOfArraysTwoEnd(nparray, 3)
+        self.assertEqual(4.5, mean)

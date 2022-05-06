@@ -129,7 +129,12 @@ class T3LazyTrainEnv(t3_lazy_robot_env.T3LazyRobotEnv):
 
     def _set_action(self, action):
         '''
-            Applies the given action to the simulation.
+            Applies the given action to the robot.
+            The Turtlebot 3's action space is set up 3 values: 
+            move forward (0), turn left (1) and turn right (2)
+
+            Input:  action, int
+            Output: none
         '''
         if action == 0:
             # forward

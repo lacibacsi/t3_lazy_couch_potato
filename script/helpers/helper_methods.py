@@ -4,6 +4,7 @@
 
 #import rospy
 from math import sqrt
+import numpy as np
 from geometry_msgs.msg import Twist
 
 
@@ -21,8 +22,6 @@ def CreateTwist(linear_velocity, angular_velocity):
     message.angular.z = angular_velocity
     return message
 
-# Check - goal near
-
 
 def CheckGoalNear(x, y, x_goal, y_goal):
     '''
@@ -34,5 +33,24 @@ def CheckGoalNear(x, y, x_goal, y_goal):
     ro = sqrt(pow((x_goal - x), 2) + pow((y_goal - y), 2))
     if ro < 0.3:
         return True
-    else:
-        return False
+
+    return False
+
+
+def MeanOfArraysTwoEnd(nparray, slice_size):
+    '''
+        Returns the mean of the array's beginning and end. The size of the two slices is 2x slice_size
+        i.e. if the slice_size is 3, the mean of the numpy array's first 3 and last 3 items will be returned as a single number
+
+        Input:
+            nparray:    input one-dimensional numpy array
+            slice_size: size of slice on one end
+
+        Output: the mean of the beginning and end of the array - no check is applied on the size of the slice vs the size of the array        
+    '''
+    np_size = nparray.size()
+    concated = np.concatenate(np.sum(nparray[0:slice_size]), np.sum(
+        nparray[np_size - slice_size:np_size]))
+
+    # Note: no check on dimension -> this method only works for one-dimensional array
+    return np.mean(concated)[0]

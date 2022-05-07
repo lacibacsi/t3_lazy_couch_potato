@@ -5,7 +5,6 @@
 #import rospy
 from math import sqrt
 import numpy as np
-import rospy
 from geometry_msgs.msg import Twist
 
 

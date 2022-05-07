@@ -8,6 +8,8 @@ from gym import spaces
 # our custom robot environment - the task environment inherits from this class
 from environments import t3_lazy_robot_env
 
+#from helpers import helper_methods
+
 # registering the environment
 print(register(
     id='TurtleBot3LazyCouch-v0',
@@ -30,6 +32,9 @@ ANGULAR_SPEED_FWD = 0.0
 LINEAR_SPEED_TURN = 0.06
 ANGULAR_SPEED_TURN = 0.4
 
+STATE_STATE_MAX_INDEX = 81 - 1  # TODO: move to param
+STATE_STATE_MIN_INDEX = 1 - 1
+
 
 class T3LazyTrainEnv(t3_lazy_robot_env.T3LazyRobotEnv):
     '''
@@ -51,35 +56,54 @@ class T3LazyTrainEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         self.rate = rospy.Rate(10)  # setting to 10Hz for now
         self.cumulated_steps = 0.0
 
+        # this task environment uses the following observation space
+        # based on Lukovic Aleksa's MSc theses
+        # there are 4 variables, 2 for obstacle distance and 2 for obstacle position
+        # x1-x2 (for distance) values set based on how far the obstacle is:
+        #   0: if the obstacle is between 20 cm and 40 cm (<20 is crash)
+        #   1: if between 40 and 70 cm
+        #   2: if between 70 and 100 cm
+        #   values higher than that are not important and hence we don't care when training
+        #
+        # x3-x4 (for positioning) is set in the following way (simplified approach compared to the source)
+        #   0: if the obstacle is closer to the forward axis - left1 and right1 (0 and 25 degrees)
+        #   1: if the obstacle is between 25 and 50 degrees
+        #   2: if the obstacle is between 50 and 75 degrees
+        #
+        # hence the observation space is 3x3x3x3 = 81
+        self.observation_space = spaces.Box(
+            np.array([0, 0, 0, 0]), np.array([2, 2, 2, 2]))
+
     def _get_distances(self):
-        '''
-            Returns an average distance of LIDAR reads for 'sectors'
-            The full laser scan range read by the robot is split into 5 sectors
+        '''            
+            Returns an average distance of LIDAR reads for 'sectors' - inspired by Lukovic Aleksa's MSc Thesis
+            The full laser scan range read by the robot is split into 6 sectors                        
             to avoid obstacles we don't really care about the 90 - 75 degree ranges,
             so the forward sector is not uniformly split into the following ranges from left to right:
-            - 75 -> - 55 degrees (left)
-            - 55 -> -30 degrees
-            - 30 -> 30 degrees
-            30 -> 55 degrees
-            55 -> 75 degrees (right)
+            - 75 -> - 50 degrees (left)
+            - 50 -> -25 degrees
+            - 25 -> 0 degrees (forward left)
+            0 -> 25 degrees (forward right)
+            25 -> 50 degrees
+            50 -> 75 degrees (right)
 
             For each range a mean value is returned
 
             Input: none
-            Return: 5 mean distance values from left to right
+            Return: 6 mean distance values from left to right
         '''
         ranges = self.get_laser_scan()
 
-        most_left = np.mean(ranges[55:75])
-        left = np.mean(ranges[30:55])
+        left3 = np.mean(ranges[50:75])
+        left2 = np.mean(ranges[25:50])
+        left1 = np.mean(ranges[0:25])
+        rigt3 = np.mean(ranges[285:310])
+        right2 = np.mean(ranges[310:335])
+        right1 = np.mean(ranges[335:360])
 
-        right = np.mean(ranges[305:330])
-        most_right = np.mean(ranges[285:305])
+        #forward = helper_methods.MeanOfArraysTwoEnd(ranges, 30)
 
-        forward = np.concatenate(np.sum(ranges[0:30]), np.sum(ranges[330:359]))
-        forward = np.mean(forward)
-
-        return most_left, left, forward, right, most_right
+        return left3, left2, left1, right1, right2, rigt3
 
     # virtual methods from robot envrionment
     def _set_init_pose(self):

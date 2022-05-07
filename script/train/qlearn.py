@@ -1,10 +1,8 @@
 #! usr/bin/env python
 
 import random
+from agent_class import agent_class
 
-'''
-    qlearn implementation -> used in assessment 2 for the Robotics cours
-'''
 
 '''
 Q-learning approach for different RL problems
@@ -17,13 +15,27 @@ Inspired by https://gym.openai.com/evaluations/eval_kWknKOkPQ7izrixdhriurA
 '''
 
 
-class QLearn:
-    def __init__(self, actions, epsilon, alpha, gamma):
+class QLearn(agent_class):
+    '''
+        qlearn implementation -> used in assessment 2 for the Robotics cours
+        Based on the construct code and https://github.com/vmayoral/basic_reinforcement_learning
+        some parts and ideas taken from https://github.com/karray/neuroracer 
+    '''
+
+    def __init__(self, state_size, action_size, epsilon, alpha, gamma):
         self.q = {}
         self.epsilon = epsilon  # exploration constant
         self.alpha = alpha      # discount constant
         self.gamma = gamma      # discount factor
-        self.actions = actions
+        #self.actions = actions
+        self.actions = action_size
+        self.state = state_size
+
+        # TODO: replace this with proper ctor chaining
+        super.__init__(self, state_size, action_size)
+
+        # required by parent
+        self.exploration_rate = epsilon
 
     def getQ(self, state, action):
         return self.q.get((state, action), 0.0)
@@ -65,6 +77,16 @@ class QLearn:
             return action, q
         return action
 
-    def learn(self, state1, action1, reward, state2):
+    def _learn(self, state1, action1, reward, state2):
         maxqnew = max([self.getQ(state2, a) for a in self.actions])
         self.learnQ(state1, action1, reward, reward + self.gamma*maxqnew)
+
+    # agent class virtual methods
+    def act(self, state):
+        '''
+            Based on the current state and the agent's settings, returns the selected action             
+        '''
+        return self.chooseAction(state)
+
+    def learn(self, last_state, action, reward, next_state):
+        return self._learn(last_state, action, reward, next_state)

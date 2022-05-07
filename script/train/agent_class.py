@@ -1,6 +1,6 @@
 #! /usr/bin/evn python
 
-class agent_class():
+class agent_class(object):
     '''
         Abstract agent class containing only virtual methods 
         These methods are used by the robot training class 
@@ -32,13 +32,13 @@ class agent_class():
         '''
         raise NotImplementedError()
 
-    def save():
+    def save(self):
         '''
             Save the model and / or training results
         '''
         raise NotImplementedError()
 
-    def load():
+    def load(self):
         '''
             Loads the model and / or training results
         '''

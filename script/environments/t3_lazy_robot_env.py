@@ -69,7 +69,7 @@ class T3LazyRobotEnv(robot_gazebo_env.RobotGazeboEnv):
         # the robot should avoid objects closer than 0.2m
         # this also means that to pass, the robot needs a >0.4m space
         # change this value to control space needed by the turtlebot
-        self.minimum_distance = 0.2
+        self.min_distance = 0.2
 
         # list of controllers to pass to the gazebo env - Turtlebot3 does not use any
         self.controllers_list = []
@@ -115,7 +115,7 @@ class T3LazyRobotEnv(robot_gazebo_env.RobotGazeboEnv):
         if not self.initial_position:
             return
         state_msg = ModelState()
-        state_msg.model_name = 'racecar'
+        state_msg.model_name = 'turtlebot3_burger'
         state_msg.pose.position.x = self.initial_position['p_x']
         state_msg.pose.position.y = self.initial_position['p_y']
         state_msg.pose.position.z = self.initial_position['p_z']
@@ -128,9 +128,10 @@ class T3LazyRobotEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def reset(self):
         '''
-            Resets the environment, incluiding the robot's position
+            Resets the environment, including the robot's position
         '''
         super(T3LazyRobotEnv, self).reset()
+
         self.gazebo.unpauseSim()
         self.reset_position()
 
@@ -140,6 +141,14 @@ class T3LazyRobotEnv(robot_gazebo_env.RobotGazeboEnv):
         return self._get_obs()
 
     # system readiness checks
+    def _check_all_systems_ready(self):
+        '''
+            Checks that all the sensors, publishers and other simulation systems are
+            operational. Mandatory, required by Gazebo
+        '''
+        self._check_all_sensors_ready()
+        return True
+
     def _check_all_sensors_ready(self):
         '''
             Checks if all required sensors are operational

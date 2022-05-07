@@ -74,6 +74,8 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         self.observation_space = spaces.Box(
             np.array([0, 0, 0, 0]), np.array([2, 2, 2, 2]))
 
+        super(T3LazyTaskEnv, self).__init__()
+
     def _get_distances(self):
         '''            
             Returns an average distance of LIDAR reads for 'sectors' - inspired by Lukovic Aleksa's MSc Thesis

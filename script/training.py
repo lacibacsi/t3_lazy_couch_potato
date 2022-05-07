@@ -2,7 +2,7 @@
 
 import rospy
 from t3_lazy import t3_lazy
-
+from train.qlearn import QLearn
 
 if __name__ == "__main__":
 
@@ -31,7 +31,8 @@ if __name__ == "__main__":
     # print(type(agent_class))
 
     # creating the wrapper class
-    robot = t3_lazy(agent_class)
+    # robot = t3_lazy(agent_class)
+    robot = t3_lazy(QLearn)
 
     rospy.logwarn('Gym environment done. ')
     rospy.logwarn('Agent is ' + agent_name)

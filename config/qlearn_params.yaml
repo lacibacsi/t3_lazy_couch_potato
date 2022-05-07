@@ -18,3 +18,5 @@ t3_lazy_couch_potato_v0: #namespace
 
   init_pos: 0.0 # Position in which the base will start
   wait_time: 0.1 # Time to wait in the reset phases
+
+  qfile_directory: '/home/user/catkin_ws/src/t3_lazy_couch_potato/training_results'

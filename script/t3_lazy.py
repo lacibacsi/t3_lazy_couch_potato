@@ -3,7 +3,9 @@
 import rospy
 import gym
 import numpy as np
-from environments import t3_lazy_task_env
+#from environments import t3_lazy_task_env
+from environments.t3_lazy_task_env import T3LazyTaskEnv
+
 
 # TODO: agent param?
 EPISODE_LENGTH = 20
@@ -23,9 +25,13 @@ class t3_lazy:
             Input: agent_class that will be used for training
         '''
 
+        print('t3 lazy ctor')
         self.env = gym.make('TurtleBot3LazyCouch-v0')
+        print('gym env created')
+
         self.state_size = self.env.observation_space.shape
-        self.action_size = self.env.action_space.shape
+        #self.action_size = self.env.action_space.shape
+        self.action_size = self.env.action_space.n
 
         # creating the agent with the action and state sizes
         self.agent = agent_class(self.state_size, self.action_size)

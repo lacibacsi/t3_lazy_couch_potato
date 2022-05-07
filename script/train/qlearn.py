@@ -24,11 +24,15 @@ class QLearn(agent_class):
         some parts and ideas taken from https://github.com/karray/neuroracer 
     '''
 
-    def __init__(self, state_size, action_size, path='~/qlearn_training_results/', qvalues_filename='qlearn_results'):
+    def __init__(self, state_size, action_size):
         '''
             Constructor for the Qlearn class. Sets private properties, sets up folder for storing model interim and final results 
         '''
         self.q = {}
+
+        # TODO: params
+        self.path = '~/qlearn_training_results/'
+        self.qvalues_filename = 'qlearn_results'
 
         # reading config values from config/qlearn_params.yaml
         epsilon = rospy.get_param('/t3_lazy_couch_potato_v0/epsilon')
@@ -42,8 +46,8 @@ class QLearn(agent_class):
         self.actions = action_size
         self.state = state_size
 
-        self.path = path
-        self.q_file_name = path + qvalues_filename
+        #self.path = path
+        self.q_file_name = self.path + self.qvalues_filename
 
         # TODO: replace this with proper ctor chaining
         super.__init__(self, state_size, action_size)

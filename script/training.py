@@ -28,6 +28,8 @@ if __name__ == "__main__":
     module = __import__(agent_name)
     agent_class = getattr(module, agent_class_name)
 
+    # print(type(agent_class))
+
     # creating the wrapper class
     robot = t3_lazy(agent_class)
 

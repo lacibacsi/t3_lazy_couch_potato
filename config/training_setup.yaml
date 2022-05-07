@@ -1,3 +1,3 @@
 t3_lazy_couch_potato_v0: #namespace
   agent_name: qlearn
-  agent_class: qlearn
+  agent_class: QLearn

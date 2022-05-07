@@ -13,7 +13,7 @@ from environments import t3_lazy_robot_env
 # registering the environment
 print(register(
     id='TurtleBot3LazyCouch-v0',
-    entry_point='t3_lazy_task_evk:T3LazyTrainEnv'
+    entry_point='environments.t3_lazy_task_env:T3LazyTaskEnv'
     # timestep_limit=timestep_limit_per_episode,
 ))
 
@@ -23,9 +23,9 @@ print(register(
 # and its accompanying thesis
 
 # TODO: move these to a params file
-FORWARD_REWARD: 0.2
-RIGHT_REWARD: -0.1
-LEFT_REWARD: -0.
+FORWARD_REWARD = 0.2
+RIGHT_REWARD = -0.1
+LEFT_REWARD = -0.1
 
 LINEAR_SPEED_FWD = 0.8
 ANGULAR_SPEED_FWD = 0.0
@@ -36,7 +36,7 @@ STATE_STATE_MAX_INDEX = 81 - 1  # TODO: move to param
 STATE_STATE_MIN_INDEX = 1 - 1
 
 
-class T3LazyTrainEnv(t3_lazy_robot_env.T3LazyRobotEnv):
+class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
     '''
         Custom train environment based on:
         OpenAI example: https://bitbucket.org/theconstructcore/openai_ros and 

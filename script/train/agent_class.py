@@ -31,3 +31,15 @@ class agent_class():
                     next state  - new state space index
         '''
         raise NotImplementedError()
+
+    def save():
+        '''
+            Save the model and / or training results
+        '''
+        raise NotImplementedError()
+
+    def load():
+        '''
+            Loads the model and / or training results
+        '''
+        raise NotImplementedError()

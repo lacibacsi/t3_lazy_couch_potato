@@ -1,6 +1,8 @@
 #! usr/bin/env python
 
 import random
+import os
+import rospy
 from agent_class import agent_class
 
 
@@ -22,14 +24,26 @@ class QLearn(agent_class):
         some parts and ideas taken from https://github.com/karray/neuroracer 
     '''
 
-    def __init__(self, state_size, action_size, epsilon, alpha, gamma):
+    def __init__(self, state_size, action_size, path='~/qlearn_training_results/', qvalues_filename='qlearn_results'):
+        '''
+            Constructor for the Qlearn class. Sets private properties, sets up folder for storing model interim and final results 
+        '''
         self.q = {}
+
+        # reading config values from config/qlearn_params.yaml
+        epsilon = rospy.get_param('/t3_lazy_couch_potato_v0/epsilon')
+        alpha = rospy.get_param('/t3_lazy_couch_potato_v0/epsilon')
+        gamma = rospy.get_param('/t3_lazy_couch_potato_v0/epsilon')
+
         self.epsilon = epsilon  # exploration constant
         self.alpha = alpha      # discount constant
         self.gamma = gamma      # discount factor
         #self.actions = actions
         self.actions = action_size
         self.state = state_size
+
+        self.path = path
+        self.q_file_name = path + qvalues_filename
 
         # TODO: replace this with proper ctor chaining
         super.__init__(self, state_size, action_size)
@@ -90,3 +104,22 @@ class QLearn(agent_class):
 
     def learn(self, last_state, action, reward, next_state):
         return self._learn(last_state, action, reward, next_state)
+
+    def save(self):
+        '''
+            Saves the interim qvalues. The file gets rewritten every time, this agent does not keep history.
+            History is better persisted and analyzed at the caller, training class level
+        '''
+        with open(self.q_file_name, mode='w') as f:
+            f.write(self.q)
+
+    def load(self):
+        '''
+            If present, leads the interim qvalues and state information 
+        '''
+        if os.path.isfile(self.q_file_name) and os.path.getsize(self.q_file_name) > 0:
+            with open(self.q_file_name, mode='r') as f:
+                self.q = f.read()
+        else:
+            # file does not exist or is empty
+            self.q = {}

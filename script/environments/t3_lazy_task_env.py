@@ -8,7 +8,7 @@ from gym import spaces
 # our custom robot environment - the task environment inherits from this class
 from environments import t3_lazy_robot_env
 
-#from helpers import helper_methods
+# from helpers import helper_methods
 
 # registering the environment
 print(register(
@@ -39,7 +39,7 @@ STATE_STATE_MIN_INDEX = 1 - 1
 class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
     '''
         Custom train environment based on:
-        OpenAI example: https://bitbucket.org/theconstructcore/openai_ros and 
+        OpenAI example: https://bitbucket.org/theconstructcore/openai_ros and
         NeuroRacer: https://github.com/karray/neuroracer
 
         In general it uses a simple reward mechanism and a discretized observation space based on the above sources
@@ -70,16 +70,22 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         #   1: if the obstacle is between 25 and 50 degrees
         #   2: if the obstacle is between 50 and 75 degrees
         #
-        # hence the observation space is 3x3x3x3 = 81
-        self.observation_space = spaces.Box(
-            np.array([0, 0, 0, 0]), np.array([2, 2, 2, 2]))
+        # hence the observation space size is 3x3x3x3 = 81
+        # as all 4 variables are discrete with max 3 values, a tuple of 4 discrete space can be set up
+        self.observation_space = {'x1': spaces.Discrete(3), 'x2': spaces.Discrete(
+            3), 'x3': spaces.Discrete(3), 'x4': spaces.Discrete(3)}
+        # self.observation_space = spaces.Dict({'x1': spaces.Discrete(
+        #    3), 'x2': spaces.Discrete(3), 'x3': spaces.Discrete(3), 'x4': spaces.Discrete(3)})
+
+        # self.observation_space = spaces.Box(
+        #    np.array([0, 0, 0, 0]), np.array([2, 2, 2, 2]), dtype=np.float32)
 
         super(T3LazyTaskEnv, self).__init__()
 
     def _get_distances(self):
-        '''            
+        '''
             Returns an average distance of LIDAR reads for 'sectors' - inspired by Lukovic Aleksa's MSc Thesis
-            The full laser scan range read by the robot is split into 6 sectors                        
+            The full laser scan range read by the robot is split into 6 sectors
             to avoid obstacles we don't really care about the 90 - 75 degree ranges,
             so the forward sector is not uniformly split into the following ranges from left to right:
             - 75 -> - 50 degrees (left)
@@ -103,7 +109,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         right2 = np.mean(ranges[310:335])
         right1 = np.mean(ranges[335:360])
 
-        #forward = helper_methods.MeanOfArraysTwoEnd(ranges, 30)
+        # forward = helper_methods.MeanOfArraysTwoEnd(ranges, 30)
 
         return left3, left2, left1, right1, right2, rigt3
 
@@ -156,7 +162,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
     def _set_action(self, action):
         '''
             Applies the given action to the robot.
-            The Turtlebot 3's action space is set up 3 values: 
+            The Turtlebot 3's action space is set up 3 values:
             move forward (0), turn left (1) and turn right (2)
 
             Input:  action, int

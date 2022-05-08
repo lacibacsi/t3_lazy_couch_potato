@@ -58,6 +58,8 @@ class QLearn():
 
         self.state = state_size
 
+        rospy.logwarn('self state: {}'.format(self.state))
+
         #self.path = path
         #self.q_file_name = self.path + self.qvalues_filename
 

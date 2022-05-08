@@ -30,6 +30,8 @@ class t3_lazy:
         rospy.loginfo('Gym environment created')
 
         self.state_size = self.env.observation_space.shape
+        rospy.loginfo('observartion space: {}'.format(
+            str(self.env.observation_space)))
 
         # self.action_size = self.env.action_space.shape
         #self.action_size = self.env.action_space.n

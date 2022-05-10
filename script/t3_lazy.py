@@ -77,10 +77,8 @@ class t3_lazy:
                     rospy.logwarn('agent state saved')
 
                 # set up random position to start with
-                # self.env.initial_position = {'p_x': np.random.uniform(
-                #    1, 4), 'p_y': 3.7, 'p_z': 0.05, 'o_x': 0, 'o_y': 0.0, 'o_z': np.random.uniform(0.4, 1), 'o_w': 0.360}
                 self.env.initial_position = {'p_x': 0.0, 'p_y': 0.0, 'p_z': 0.0,
-                                             'o_x': 0, 'o_y': 0.0, 'o_z': 0, 'o_w': 0}
+                                             'o_x': 0, 'o_y': 0.0, 'o_z': np.random.uniform(0.4, 1), 'o_w': 0}
                 state = self.env.reset()
 
                 rospy.loginfo('environment reset')

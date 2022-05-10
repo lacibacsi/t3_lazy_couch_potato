@@ -142,7 +142,7 @@ class QLearn():
             Saves the interim qvalues. The file gets rewritten every time, this agent does not keep history.
             History is better persisted and analyzed at the caller, training class level
         '''
-        rospy.logwarn('type of q table: {}'.format(type(self.q)))
+        #rospy.logwarn('type of q table: {}'.format(type(self.q)))
         with open(self.qfile, mode='wb') as f:
             #rospy.loginfo('q values are: {}'.format(self.q))
             pickle.dump(self.q, f, protocol=pickle.HIGHEST_PROTOCOL)

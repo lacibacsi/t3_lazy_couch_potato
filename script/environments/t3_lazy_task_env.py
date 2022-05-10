@@ -7,8 +7,7 @@ from gym import spaces
 
 # our custom robot environment - the task environment inherits from this class
 from environments import t3_lazy_robot_env
-
-# from helpers import helper_methods
+from helpers import helper_methods
 
 # registering the environment
 print(register(
@@ -27,7 +26,12 @@ FORWARD_REWARD = 0.2
 RIGHT_REWARD = -0.1
 LEFT_REWARD = -0.1
 
-LINEAR_SPEED_FWD = 0.8
+OBSTACLE_CLOSER_REWARD = -0.2
+OBSTACLE_FURTHER_REWARD = 0.2
+
+SWITCH_LEFT_RIGHT_REWARD = -0.8
+
+LINEAR_SPEED_FWD = 0.08
 ANGULAR_SPEED_FWD = 0.0
 LINEAR_SPEED_TURN = 0.06
 ANGULAR_SPEED_TURN = 0.4
@@ -55,6 +59,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
 
         self.rate = rospy.Rate(10)  # setting to 10Hz for now
         self.cumulated_steps = 0.0
+        self.last_avg = 0.0
 
         super(T3LazyTaskEnv, self).__init__()
 
@@ -95,7 +100,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
             25 -> 50 degrees
             50 -> 75 degrees (right)
 
-            For each range a mean value is returned
+            For each range a mean value is returned as well as the average of all relevant values (-75 to +75 degrees)
 
             Input: none
             Return: 6 mean distance values from left to right
@@ -109,15 +114,15 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         right2 = np.mean(ranges[310:335])
         right1 = np.mean(ranges[335:360])
 
-        # forward = helper_methods.MeanOfArraysTwoEnd(ranges, 30)
+        avg = helper_methods.MeanOfArraysTwoEnd(ranges, 75)
 
-        return left3, left2, left1, right1, right2, rigt3
+        return left3, left2, left1, right1, right2, rigt3, avg
 
     # overwriting robot obs
     def _get_obs(self):
         '''
-            returns the observations by the robot, 
-            which is build up by the following method:
+            returns the observations by the robot
+            which is build up by the following method
             there are 4 variables, 2 for obstacle distance and 2 for obstacle position
             x1-x2 (for distance) values set based on how far the obstacle is for left and right side respectively:
             0: if the obstacle is between 20 cm and 40 cm (<20 is crash)
@@ -130,8 +135,10 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
             0: if the obstacle is closer to the forward axis - left1 and right1 (0 and 25 degrees)
             1: if the obstacle is between 25 and 50 degrees
             2: if the obstacle is between 50 and 75 degrees
+
+            the method additionally returns the average measured distance from the next obstacle for the total width of the lidar scan 
         '''
-        left3, left2, left1, right1, right2, right3 = self._get_distances()
+        left3, left2, left1, right1, right2, right3, avg = self._get_distances()
 
         # calculating values for observability space
         x1 = 2
@@ -163,7 +170,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         elif (right_min == right1):
             x4 = 0
 
-        return (x1, x2, x3, x4)
+        return (x1, x2, x3, x4, avg)
 
     # virtual methods from robot envrionment
     def _set_init_pose(self):
@@ -191,6 +198,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         # 1. if there is a collision, huge negative reward
         # 2. otherwise prefer forward movement
         # 3. add reward / penalty based on x1, x2, x3, x4
+        # 4. add reward on whether we're moving away from ostacle
 
         if not done:
             # 2 - prefer forward motion
@@ -203,13 +211,23 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
             # if x1 or x2 is small there is an obstacle close by
             # if x3 or x4 is small the obstacle is close to the left / right
             # each case is penalized by -0.3 / -0.6
-            (x1, x2, x3, x4) = self._get_obs()
-            x_penalty_factor = 0.3
+            (x1, x2, x3, x4, avg) = self._get_obs()
+            x_penalty_factor = 0.15
 
             reward = -x_penalty_factor * (2-x1)
             reward = -x_penalty_factor * (2-x2)
             reward = -x_penalty_factor * (2-x3)
             reward = -x_penalty_factor * (2-x4)
+
+            # 4. add reward on whether we're moving away from ostacle
+            if self.last_avg > avg:
+                rw2 = OBSTACLE_CLOSER_REWARD
+            else:
+                rw2 = OBSTACLE_FURTHER_REWARD
+
+            reward += rw2
+
+            self.last_avg = avg
 
             #obs_distance = self._closest_obstacle()
             # if obs_distance < 0.3:

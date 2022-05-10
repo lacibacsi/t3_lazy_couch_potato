@@ -114,7 +114,8 @@ class t3_lazy:
                     #    self.env._get_distances()))
                     #rospy.logwarn('x values: {}'.format(self.env._get_obs()))
 
-                self.save_episode_reward(episodes, cumulated_reward)
+                self.save_episode_reward(
+                    episodes, cumulated_reward, episode_steps)
 
                 # update reward, log info
                 episodes += 1
@@ -132,10 +133,11 @@ class t3_lazy:
             rospy.loginfo("Total episodes: {}".format(episodes))
             rospy.loginfo("Total steps: {}".format(steps))
 
-    def save_episode_reward(self, episode_number, reward):
+    def save_episode_reward(self, episode_number, reward, steps):
         '''
             appends the episode number and the reward to the end of the training result\episode_reward file
         '''
         with open(self.episodefile, mode='a') as f:
-            row = str(episode_number) + ', ' + str(reward) + '\n'
+            row = str(episode_number) + ', ' + \
+                str(reward) + ', ' + str(steps) + '\n'
             f.write(row)

@@ -291,11 +291,13 @@ class T3LazyRobotEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def _get_obs(self):
         '''
-            returns the observations by the robot, which is only the LIDAR for now
+            returns the observation from the robot, curently only lidar
         '''
-        return self.laser_scan
+
+        return self.get_laser_scan()
 
     # to be used in the training environment, not virtual
+
     def _is_done(self, observations):
         '''
             Checks if episode done based on observations given.

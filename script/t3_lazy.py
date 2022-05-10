@@ -2,14 +2,15 @@
 
 import rospy
 import gym
+import os
 import numpy as np
 # from environments import t3_lazy_task_env
 from environments.t3_lazy_task_env import T3LazyTaskEnv
 
 
 # TODO: agent param?
-EPISODE_LENGTH = 20
-EPISODE_COUNT = 10
+EPISODE_LENGTH = 300
+EPISODE_COUNT = 1000
 SAVE_FREQUENCY = 3
 
 
@@ -26,10 +27,16 @@ class t3_lazy:
             Input: agent_class that will be used for training
         '''
 
+        self.path = rospy.get_param('/t3_lazy_couch_potato_v0/qfile_directory')
+        self.reward_filename = 'episode_reward'
+        self.episodefile = os.path.join(self.path, self.reward_filename)
+
         self.env = gym.make('TurtleBot3LazyCouch-v0')
         rospy.loginfo('Gym environment created')
 
-        self.state_size = self.env.observation_space.shape
+        #self.state_size = self.env.observation_space.shape
+        self.states = self.env.observation_space
+
         rospy.loginfo('observartion space: {}'.format(
             str(self.env.observation_space)))
 
@@ -38,7 +45,8 @@ class t3_lazy:
         self.actions = self.env.action_space
 
         # creating the agent with the action and state sizes
-        self.agent = agent_class_type(self.state_size, self.actions)
+        #self.agent = agent_class_type(self.state_size, self.actions)
+        self.agent = agent_class_type(self.states, self.actions)
 
         self.highest_reward = -np.inf
 
@@ -69,8 +77,10 @@ class t3_lazy:
                     rospy.logwarn('agent state saved')
 
                 # set up random position to start with
-                self.env.initial_position = {'p_x': np.random.uniform(
-                    1, 4), 'p_y': 3.7, 'p_z': 0.05, 'o_x': 0, 'o_y': 0.0, 'o_z': np.random.uniform(0.4, 1), 'o_w': 0.360}
+                # self.env.initial_position = {'p_x': np.random.uniform(
+                #    1, 4), 'p_y': 3.7, 'p_z': 0.05, 'o_x': 0, 'o_y': 0.0, 'o_z': np.random.uniform(0.4, 1), 'o_w': 0.360}
+                self.env.initial_position = {'p_x': 0.0, 'p_y': 0.0, 'p_z': 0.0,
+                                             'o_x': 0, 'o_y': 0.0, 'o_z': 0, 'o_w': 0}
                 state = self.env.reset()
 
                 rospy.loginfo('environment reset')
@@ -84,7 +94,7 @@ class t3_lazy:
                     episode_steps += 1
 
                     # this is where q-learn, sarsa, dqn etc. will act on the input states...
-                    rospy.loginfo('step no. {}'.format(steps))
+                    #rospy.loginfo('step no. {}'.format(steps))
 
                     action = self.agent.act(state)
 
@@ -95,10 +105,16 @@ class t3_lazy:
                     cumulated_reward += reward
 
                     self.agent.learn(last_state, action, reward, next_state)
+                    last_state = next_state
 
                 # end of episode
                 if done:
                     rospy.logwarn('crashed...')
+                    # rospy.logwarn('distance values: {}'.format(
+                    #    self.env._get_distances()))
+                    #rospy.logwarn('x values: {}'.format(self.env._get_obs()))
+
+                self.save_episode_reward(episodes, cumulated_reward)
 
                 # update reward, log info
                 episodes += 1
@@ -115,3 +131,11 @@ class t3_lazy:
             self.env.close()
             rospy.loginfo("Total episodes: {}".format(episodes))
             rospy.loginfo("Total steps: {}".format(steps))
+
+    def save_episode_reward(self, episode_number, reward):
+        '''
+            appends the episode number and the reward to the end of the training result\episode_reward file
+        '''
+        with open(self.episodefile, mode='a') as f:
+            row = str(episode_number) + ', ' + str(reward) + '\n'
+            f.write(row)

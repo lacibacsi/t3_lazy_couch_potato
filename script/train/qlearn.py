@@ -26,12 +26,12 @@ class QLearn():
         some parts and ideas taken from https://github.com/karray/neuroracer 
     '''
 
-    def __init__(self, state_size, actions):
+    def __init__(self, states, actions):
         '''
             Constructor for the Qlearn class. Sets private properties, sets up folder for storing model interim and final results 
         '''
         self.q = {}
-        self.state_size = state_size
+        #self.state_size = state_size
 
         # TODO: params
         self.path = rospy.get_param('/t3_lazy_couch_potato_v0/qfile_directory')
@@ -56,7 +56,7 @@ class QLearn():
 
         rospy.logwarn('actions converted to {}'.format(self.actions))
 
-        self.state = state_size
+        self.state = states
 
         rospy.logwarn('self state: {}'.format(self.state))
 
@@ -70,18 +70,18 @@ class QLearn():
         self.exploration_rate = epsilon
 
     def getQ(self, state, action):
-        return self.q.get((state, action), 0.0)
+        return self.q.get(((state), action), 0.0)
 
     def learnQ(self, state, action, reward, value):
         '''
         Q-learning:
             Q(s, a) += alpha * (reward(s,a) + max(Q(s') - Q(s,a))            
         '''
-        oldv = self.q.get((state, action), None)
+        oldv = self.q.get(((state), action), None)
         if oldv is None:
-            self.q[(state, action)] = reward
+            self.q[((state), action)] = reward
         else:
-            self.q[(state, action)] = oldv + self.alpha * (value - oldv)
+            self.q[((state), action)] = oldv + self.alpha * (value - oldv)
 
     def chooseAction(self, state, return_q=False):
         q = [self.getQ(state, a) for a in self.actions]
@@ -130,6 +130,11 @@ class QLearn():
                     reward      - reward received based on last state and performed action
                     next state  - new state space index
         '''
+        #rospy.loginfo('learn called, last state: {}'.format(last_state))
+        #rospy.loginfo('learn called, next state: {}'.format(next_state))
+        #rospy.loginfo('learn called, action: {}'.format(action))
+        #rospy.loginfo('learn called, next state: {}'.format(reward))
+
         return self._learn(last_state, action, reward, next_state)
 
     def save(self):
@@ -139,8 +144,9 @@ class QLearn():
         '''
         rospy.logwarn('type of q table: {}'.format(type(self.q)))
         with open(self.qfile, mode='wb') as f:
+            #rospy.loginfo('q values are: {}'.format(self.q))
             pickle.dump(self.q, f, protocol=pickle.HIGHEST_PROTOCOL)
-            rospy.loginfo('q saved as {}'.format(str(self.q)))
+            #rospy.loginfo('q saved as {}'.format(str(self.q)))
 
     def load(self):
         '''
@@ -150,7 +156,7 @@ class QLearn():
             with open(self.qfile, mode='rb') as f:
                 #self.q = f.read()
                 self.q = pickle.load(f)
-                rospy.loginfo('q loaded as {}'.format(str(self.q)))
+                rospy.loginfo('q loaded as {}'.format(self.q))
         else:
             # file does not exist or is empty
             self.q = {}

@@ -56,6 +56,8 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         self.rate = rospy.Rate(10)  # setting to 10Hz for now
         self.cumulated_steps = 0.0
 
+        super(T3LazyTaskEnv, self).__init__()
+
         # this task environment uses the following observation space
         # based on Lukovic Aleksa's MSc theses
         # there are 4 variables, 2 for obstacle distance and 2 for obstacle position
@@ -72,15 +74,13 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         #
         # hence the observation space size is 3x3x3x3 = 81
         # as all 4 variables are discrete with max 3 values, a tuple of 4 discrete space can be set up
-        self.observation_space = {'x1': spaces.Discrete(3), 'x2': spaces.Discrete(
-            3), 'x3': spaces.Discrete(3), 'x4': spaces.Discrete(3)}
-        # self.observation_space = spaces.Dict({'x1': spaces.Discrete(
-        #    3), 'x2': spaces.Discrete(3), 'x3': spaces.Discrete(3), 'x4': spaces.Discrete(3)})
+        self.observation_space = spaces.Tuple({'x1': spaces.Discrete(3), 'x2': spaces.Discrete(
+            3), 'x3': spaces.Discrete(3), 'x4': spaces.Discrete(3)})
 
         # self.observation_space = spaces.Box(
         #    np.array([0, 0, 0, 0]), np.array([2, 2, 2, 2]), dtype=np.float32)
 
-        super(T3LazyTaskEnv, self).__init__()
+        # super(T3LazyTaskEnv, self).__init__()
 
     def _get_distances(self):
         '''
@@ -113,6 +113,58 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
 
         return left3, left2, left1, right1, right2, rigt3
 
+    # overwriting robot obs
+    def _get_obs(self):
+        '''
+            returns the observations by the robot, 
+            which is build up by the following method:
+            there are 4 variables, 2 for obstacle distance and 2 for obstacle position
+            x1-x2 (for distance) values set based on how far the obstacle is for left and right side respectively:
+            0: if the obstacle is between 20 cm and 40 cm (<20 is crash)
+            1: if between 40 and 70 cm
+            2: if between 70 and 100 cm
+            values higher than that are not important and hence we don't care when training. 
+            Values larger than 100 cm are filtered out
+
+            x3-x4 (for positioning) is set in the following way (simplified approach compared to the source)
+            0: if the obstacle is closer to the forward axis - left1 and right1 (0 and 25 degrees)
+            1: if the obstacle is between 25 and 50 degrees
+            2: if the obstacle is between 50 and 75 degrees
+        '''
+        left3, left2, left1, right1, right2, right3 = self._get_distances()
+
+        # calculating values for observability space
+        x1 = 2
+        left_min = min([left1, left2, left3])
+        #rospy.logwarn('lefts: {}'.format([left3, left2, left1]))
+        #rospy.logwarn('leftmin: {}'.format(left_min))
+
+        if (left_min < 0.70):
+            x1 = 1
+            if (left_min < 0.40):
+                x1 = 0
+
+        x2 = 2
+        right_min = min([right1, right2, right3])
+        if (right_min < 0.70):
+            x2 = 1
+            if (right_min < 0.40):
+                x2 = 0
+
+        x3 = 2
+        if (left_min == left2):
+            x3 = 1
+        elif (left_min == left1):
+            x3 = 0
+
+        x4 = 2
+        if (right_min == right2):
+            x4 = 1
+        elif (right_min == right1):
+            x4 = 0
+
+        return (x1, x2, x3, x4)
+
     # virtual methods from robot envrionment
     def _set_init_pose(self):
         '''
@@ -135,22 +187,35 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         '''
 
         # extremely simple for now - this needs to be reworked big time
-        # TODO: implement proper reward function
 
         # 1. if there is a collision, huge negative reward
         # 2. otherwise prefer forward movement
-        # 3. just a try now -> penalize if the obstacle is very close
+        # 3. add reward / penalty based on x1, x2, x3, x4
 
         if not done:
+            # 2 - prefer forward motion
             if self.last_action == 0:
                 reward = 0.2
             else:
                 reward = -0.1
-            obs_distance = self._closest_obstacle()
-            if obs_distance < 0.3:
-                reward -= 0.3
-            elif obs_distance < 0.6:
-                reward -= 0.1
+
+            # 3. add reward / penalty based on x1, x2, x3, x4
+            # if x1 or x2 is small there is an obstacle close by
+            # if x3 or x4 is small the obstacle is close to the left / right
+            # each case is penalized by -0.3 / -0.6
+            (x1, x2, x3, x4) = self._get_obs()
+            x_penalty_factor = 0.3
+
+            reward = -x_penalty_factor * (2-x1)
+            reward = -x_penalty_factor * (2-x2)
+            reward = -x_penalty_factor * (2-x3)
+            reward = -x_penalty_factor * (2-x4)
+
+            #obs_distance = self._closest_obstacle()
+            # if obs_distance < 0.3:
+            #    reward -= 0.3
+            # elif obs_distance < 0.6:
+            #    reward -= 0.1
         else:
             reward = -100
 

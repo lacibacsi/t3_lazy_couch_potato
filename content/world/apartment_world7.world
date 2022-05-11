@@ -1180,8 +1180,6 @@
       </link>
       <static>1</static>
     </model>
-<<<<<<< HEAD
-=======
     <state world_name='default'>                                                    
       <model name='small_apartment_windows'>
         <pose>-2.31828 0.73559 0 0 -0 0</pose>
@@ -1287,17 +1285,12 @@
         <pose>0 0 10 0 -0 0</pose>
       </light>
     </state>
->>>>>>> 99c136a... yet another world fix
     <model name='door_3d'>
       <link name='link_1'>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
-<<<<<<< HEAD
-        <pose>0 0 0 0 -0 0</pose>
-=======
         <pose>-2.02842 -1.70114 0 0 -0 0</pose>
->>>>>>> 99c136a... yet another world fix
         <gravity>1</gravity>
         <inertial>
           <mass>1</mass>
@@ -1339,11 +1332,7 @@
         <collision name='collision'>
           <laser_retro>0</laser_retro>
           <max_contacts>10</max_contacts>
-<<<<<<< HEAD
-          <pose>0 0 0 0 -0 0</pose>
-=======
           <pose>-2.02842 -1.70114 0 0 -0 0</pose>
->>>>>>> 99c136a... yet another world fix
           <geometry>
             <mesh>
               <uri>model://door_3d/meshes/door_v2_door.dae</uri>
@@ -1401,15 +1390,9 @@
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
-<<<<<<< HEAD
-        <pose>0 0 0 0 -0 0</pose>
-        <visual name='visual'>
-          <pose>0 0 0 0 -0 0</pose>
-=======
         <pose>-2.02842 -1.70114 0 0 -0 0</pose>
         <visual name='visual'>
           <pose>-2.02842 -1.70114 0 0 -0 0</pose>
->>>>>>> 99c136a... yet another world fix
           <geometry>
             <mesh>
               <uri>model://door_3d/meshes/door_v2_handle.dae</uri>
@@ -1430,11 +1413,7 @@
         <collision name='collision'>
           <laser_retro>0</laser_retro>
           <max_contacts>10</max_contacts>
-<<<<<<< HEAD
-          <pose>0 0 0 0 -0 0</pose>
-=======
           <pose>-2.02842 -1.70114 0 0 -0 0</pose>
->>>>>>> 99c136a... yet another world fix
           <geometry>
             <mesh>
               <uri>model://door_3d/meshes/door_v2_handle.dae</uri>
@@ -1906,11 +1885,7 @@
     </model>
     <model name='Sofa'>
       <link name='link'>
-<<<<<<< HEAD
-        <pose>0 0 0 0 -0 1.5708</pose>
-=======
         <pose>1.46854 -0.411282 0.000119 2e-06 0 3.13484</pose>
->>>>>>> 99c136a... yet another world fix
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -1954,20 +1929,12 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-<<<<<<< HEAD
-      <pose>-2.77923 -0.56438 0 0 -0 0</pose>
-=======
       <pose>1.46854 -0.411282 0.000119 2e-06 0 3.13484</pose>
->>>>>>> 99c136a... yet another world fix
     </model>
     <model name='TVStand'>
       <static>1</static>
       <link name='body'>
-<<<<<<< HEAD
-        <pose>0 0 0 0 -0 0</pose>
-=======
         <pose>-6.45762 -0.482351 0 0 -0 1.58197</pose>
->>>>>>> 99c136a... yet another world fix
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -1999,19 +1966,11 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-<<<<<<< HEAD
-      <pose>-4.50677 -0.020025 0 0 -0 0</pose>
-    </model>
-    <model name='monitor_2'>
-      <link name='link_6'>
-        <pose>-0.305832 -0.059311 0 0 -0 0</pose>
-=======
       <pose>-6.45762 -0.482351 0 0 -0 1.58197</pose>
     </model>
     <model name='monitor_2'>
       <link name='link_6'>
         <pose>-6.36588 -0.813533 0.453888 0 -0 1.59036</pose>
->>>>>>> 99c136a... yet another world fix
         <visual name='visual'>
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
@@ -2036,11 +1995,7 @@
         <collision name='collision'>
           <laser_retro>0</laser_retro>
           <max_contacts>10</max_contacts>
-<<<<<<< HEAD
-          <pose>0 0 0 0 -0 0</pose>
-=======
           <pose>-6.36588 -0.813533 0.453888 0 -0 1.59036</pose>
->>>>>>> 99c136a... yet another world fix
           <geometry>
             <mesh>
               <uri>model://monitor_2/meshes/frame.dae</uri>
@@ -2065,11 +2020,7 @@
         <kinematic>0</kinematic>
       </link>
       <link name='link_8'>
-<<<<<<< HEAD
-        <pose>-0.307748 -0.058272 0 0 -0 0</pose>
-=======
         <pose>-6.36588 -0.813533 0.453888 0 -0 1.59036</pose>
->>>>>>> 99c136a... yet another world fix
         <visual name='visual'>
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
@@ -2091,11 +2042,7 @@
         <collision name='collision'>
           <laser_retro>0</laser_retro>
           <max_contacts>10</max_contacts>
-<<<<<<< HEAD
-          <pose>0 0 0 0 -0 0</pose>
-=======
           <pose>-6.36588 -0.813533 0.453888 0 -0 1.59036</pose>
->>>>>>> 99c136a... yet another world fix
           <geometry>
             <mesh>
               <uri>model://monitor_2/meshes/screen1.dae</uri>
@@ -2121,11 +2068,7 @@
       </link>
       <static>1</static>
       <allow_auto_disable>1</allow_auto_disable>
-<<<<<<< HEAD
-      <pose>-5.22472 -0.657178 0 0 -0 0</pose>
-=======
-      <pose>-6.43116 -0.50892 0.453888 0 -0 1.59036</pose>
->>>>>>> 99c136a... yet another world fix
+     <pose>-6.43116 -0.50892 0.453888 0 -0 1.59036</pose>
     </model>
     <model name='window_for_apartment_2'>
       <link name='link_2'>
@@ -2336,11 +2279,7 @@
     <model name='Fridge'>
       <static>1</static>
       <link name='body'>
-<<<<<<< HEAD
-        <pose>0 0 0 0 -0 0</pose>
-=======
         <pose>-6.34766 2.82754 0 0 -0 0</pose>
->>>>>>> 99c136a... yet another world fix
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -2372,20 +2311,12 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-<<<<<<< HEAD
-      <pose>-5.366 2.22409 0 0 -0 0</pose>
-=======
       <pose>-6.34766 2.82754 0 0 -0 0</pose>
->>>>>>> 99c136a... yet another world fix
     </model>
     <model name='MaleVisitorSit'>
       <static>1</static>
       <link name='body'>
-<<<<<<< HEAD
-        <pose>0 0 0 0 -0 0</pose>
-=======
         <pose>1.11375 -0.751014 -0.001111 0 0 -1.46404</pose>
->>>>>>> 99c136a... yet another world fix
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -2417,20 +2348,12 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-<<<<<<< HEAD
-      <pose>-4.41802 1.2946 0 0 -0 0</pose>
-=======
       <pose>1.11375 -0.751014 -0.001111 0 0 -1.46404</pose>
->>>>>>> 99c136a... yet another world fix
     </model>
     <model name='FemaleVisitorSit'>
       <static>1</static>
       <link name='body'>
-<<<<<<< HEAD
-        <pose>0 0 0 0 -0 0</pose>
-=======
-        <pose>1.09068 -0.05932 -0.003899 0 0 -1.53288</pose>
->>>>>>> 99c136a... yet another world fix
+       <pose>1.09068 -0.05932 -0.003899 0 0 -1.53288</pose>
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -2462,19 +2385,11 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-<<<<<<< HEAD
-      <pose>-3.79494 0.630522 0 0 -0 0</pose>
-    </model>
-    <model name='KitchenCountertop'>
-      <link name='link'>
-        <pose>0 0 0 0 -0 0</pose>
-=======
      <pose>1.09068 -0.05932 -0.003899 0 0 -1.53288</pose>
     </model>
     <model name='KitchenCountertop'>
       <link name='link'>
         <pose>-3.97733 2.69852 1e-06 -1e-06 1e-06 -1.57124</pose>
->>>>>>> 99c136a... yet another world fix
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -2518,20 +2433,12 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-<<<<<<< HEAD
-      <pose>-5.78613 0.602201 0 0 -0 0</pose>
-=======
       <pose>-3.97733 2.69852 1e-06 -1e-06 1e-06 -1.57124</pose>
->>>>>>> 99c136a... yet another world fix
     </model>
     <model name='Coke'>
       <static>1</static>
       <link name='body'>
-<<<<<<< HEAD
-        <pose>0 0 0 0 -0 0</pose>
-=======
        <pose>-4.09708 2.27024 0.741041 0 -0 0</pose>
->>>>>>> 99c136a... yet another world fix
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -2624,11 +2531,7 @@
         <kinematic>0</kinematic>
       </link>
       <static>1</static>
-<<<<<<< HEAD
-      <pose>-1.53387 1.31533 0 0 -0 0</pose>
-=======
-      <pose>-0.768052 2.05324 0 0 -0 0</pose>
->>>>>>> 99c136a... yet another world fix
+     <pose>-0.768052 2.05324 0 0 -0 0</pose>
     </model>
   </world>
 </sdf>

@@ -1290,7 +1290,7 @@
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
-        <pose>-2.02842 -1.70114 0 0 -0 0</pose>
+        <pose>-0.0 0.0 0 0 -0 0</pose>
         <gravity>1</gravity>
         <inertial>
           <mass>1</mass>
@@ -1332,7 +1332,7 @@
         <collision name='collision'>
           <laser_retro>0</laser_retro>
           <max_contacts>10</max_contacts>
-          <pose>-2.02842 -1.70114 0 0 -0 0</pose>
+          <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
               <uri>model://door_3d/meshes/door_v2_door.dae</uri>
@@ -1390,9 +1390,10 @@
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
-        <pose>-2.02842 -1.70114 0 0 -0 0</pose>
+        <!-- <pose>-2.02842 -1.70114 0 0 -0 0</pose> -->
+        <pose>-0 0 0 0 0 0</pose>
         <visual name='visual'>
-          <pose>-2.02842 -1.70114 0 0 -0 0</pose>
+          <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
               <uri>model://door_3d/meshes/door_v2_handle.dae</uri>
@@ -1885,7 +1886,8 @@
     </model>
     <model name='Sofa'>
       <link name='link'>
-        <pose>1.46854 -0.411282 0.000119 2e-06 0 3.13484</pose>
+        <!-- <pose>1.46854 -0.411282 0.000119 2e-06 0 3.13484</pose> -->
+        <pose>-0 -0.211282 0.000119 0 0 1.6</pose>
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -1934,7 +1936,8 @@
     <model name='TVStand'>
       <static>1</static>
       <link name='body'>
-        <pose>-6.45762 -0.482351 0 0 -0 1.58197</pose>
+        <!-- <pose>-6.45762 -0.482351 0 0 -0 1.58197</pose> -->
+        <pose>0 0 0 0 0 0</pose> 
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -1970,7 +1973,8 @@
     </model>
     <model name='monitor_2'>
       <link name='link_6'>
-        <pose>-6.36588 -0.813533 0.453888 0 -0 1.59036</pose>
+        <!-- <pose>-6.36588 -0.813533 0.453888 0 -0 1.59036</pose> -->
+        <pose>-0 0 0 0 0 0</pose>
         <visual name='visual'>
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
@@ -1995,7 +1999,7 @@
         <collision name='collision'>
           <laser_retro>0</laser_retro>
           <max_contacts>10</max_contacts>
-          <pose>-6.36588 -0.813533 0.453888 0 -0 1.59036</pose>
+          <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
               <uri>model://monitor_2/meshes/frame.dae</uri>
@@ -2020,7 +2024,8 @@
         <kinematic>0</kinematic>
       </link>
       <link name='link_8'>
-        <pose>-6.36588 -0.813533 0.453888 0 -0 1.59036</pose>
+        <!-- <pose>-6.36588 -0.813533 0.453888 0 -0 1.59036</pose> -->
+        <pose>0 0 0 0 0 0</pose>
         <visual name='visual'>
           <pose>0 0 0 0 -0 0</pose>
           <geometry>
@@ -2279,7 +2284,8 @@
     <model name='Fridge'>
       <static>1</static>
       <link name='body'>
-        <pose>-6.34766 2.82754 0 0 -0 0</pose>
+        <!-- <pose>-6.34766 2.82754 0 0 -0 0</pose> -->
+        <pose>0 0 0 0 0 0</pose>
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -2313,7 +2319,7 @@
       </link>
       <pose>-6.34766 2.82754 0 0 -0 0</pose>
     </model>
-    <model name='MaleVisitorSit'>
+    <!-- <model name='MaleVisitorSit'>
       <static>1</static>
       <link name='body'>
         <pose>1.11375 -0.751014 -0.001111 0 0 -1.46404</pose>
@@ -2349,11 +2355,11 @@
         <kinematic>0</kinematic>
       </link>
       <pose>1.11375 -0.751014 -0.001111 0 0 -1.46404</pose>
-    </model>
-    <model name='FemaleVisitorSit'>
+    </model> -->
+    <!-- <model name='FemaleVisitorSit'>
       <static>1</static>
       <link name='body'>
-       <pose>1.09068 -0.05932 -0.003899 0 0 -1.53288</pose>
+       <pose>0.65 2.0 0 0 0 0.75</pose>
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -2386,10 +2392,11 @@
         <kinematic>0</kinematic>
       </link>
      <pose>1.09068 -0.05932 -0.003899 0 0 -1.53288</pose>
-    </model>
+    </model> -->
     <model name='KitchenCountertop'>
       <link name='link'>
-        <pose>-3.97733 2.69852 1e-06 -1e-06 1e-06 -1.57124</pose>
+        <!-- <pose>-3.97733 2.69852 1e-06 -1e-06 1e-06 -1.57124</pose> -->
+        <pose>0 0 0 0 0 0</pose>
         <visual name='visual'>
           <geometry>
             <mesh>
@@ -2433,12 +2440,13 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-      <pose>-3.97733 2.69852 1e-06 -1e-06 1e-06 -1.57124</pose>
+      <pose>-3.97733 2.69852 1e-06 -1e-06 1e-06 -1.57124</pose> 
     </model>
     <model name='Coke'>
       <static>1</static>
       <link name='body'>
-       <pose>-4.09708 2.27024 0.741041 0 -0 0</pose>
+       <!-- <pose>-4.09708 2.27024 0.741041 0 -0 0</pose> -->
+       <pose>0.2 0.9 1 0 0 0</pose>       
         <visual name='visual'>
           <geometry>
             <mesh>

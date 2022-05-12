@@ -1,15 +1,19 @@
 #! /usr/bin/env python
 
+from tf.transformations import euler_from_quaternion, quaternion_from_euler
+from environments.t3_lazy_task_env import T3LazyTaskEnv
 import rospy
 import gym
 import os
 import numpy as np
+import math
+import random
 # from environments import t3_lazy_task_env
-from environments.t3_lazy_task_env import T3LazyTaskEnv
 
+# to be able to provide random orientation
 
 # TODO: agent param?
-EPISODE_LENGTH = 300
+EPISODE_LENGTH = 100
 EPISODE_COUNT = 1000
 SAVE_FREQUENCY = 3
 
@@ -77,8 +81,12 @@ class t3_lazy:
                     rospy.logwarn('agent state saved')
 
                 # set up random position to start with
+                orientation = self.get_random_orientation()
+                # self.env.initial_position = {'p_x': 0.0, 'p_y': 0.0, 'p_z': 0.0,
+                #                             'o_x': 0, 'o_y': 0.0, 'o_z': np.random.uniform(0.4, 1), 'o_w': 0}
+
                 self.env.initial_position = {'p_x': 0.0, 'p_y': 0.0, 'p_z': 0.0,
-                                             'o_x': 0, 'o_y': 0.0, 'o_z': np.random.uniform(0.4, 1), 'o_w': 0}
+                                             'o_x': orientation[0], 'o_y': orientation[1], 'o_z': orientation[2], 'o_w': orientation[3]}
                 state = self.env.reset()
 
                 rospy.loginfo('environment reset')
@@ -139,3 +147,14 @@ class t3_lazy:
             row = str(episode_number) + ', ' + \
                 str(reward) + ', ' + str(steps) + '\n'
             f.write(row)
+
+    def get_random_orientation(self):
+        '''
+            returns the robot orientation for a random yawn between -90 and 90 degrees
+        '''
+
+        yaw_angle = random.randint(90, 270)
+        print(yaw_angle)
+        yaw_rad = math.radians(yaw_angle)
+        orientation = quaternion_from_euler(0, 0, yaw_rad)
+        return orientation

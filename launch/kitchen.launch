@@ -6,7 +6,7 @@
     <arg name="gui" default="true"/>
     <arg name="headless" default="false"/>
     <arg name="debug" default="false"/>
-    <arg name="world_name" value="$(find t3_lazy_couch_potato)/content/world/apartment_world5.world"/>
+    <arg name="world_name" value="$(find t3_lazy_couch_potato)/content/world/apartment_world7.world"/>
     <!-- more default parameters can be changed here -->
   </include>
 </launch>

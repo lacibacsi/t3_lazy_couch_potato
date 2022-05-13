@@ -13,7 +13,7 @@ import random
 # to be able to provide random orientation
 
 # TODO: agent param?
-EPISODE_LENGTH = 100
+EPISODE_LENGTH = 200
 EPISODE_COUNT = 1000
 SAVE_FREQUENCY = 3
 
@@ -107,6 +107,11 @@ class t3_lazy:
                     # performing the action in the environment
                     # done already contains the check if there has been a crash
                     next_state, reward, done, _ = self.env.step(action)
+
+                    # next state also contains the average obstacle distance
+                    # that is not needed for the q table
+                    next_state = (
+                        next_state[0], next_state[1], next_state[2], next_state[3])
 
                     cumulated_reward += reward
 

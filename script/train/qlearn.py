@@ -146,13 +146,14 @@ class QLearn():
         with open(self.qfile, mode='wb') as f:
             #rospy.loginfo('q values are: {}'.format(self.q))
             pickle.dump(self.q, f, protocol=pickle.HIGHEST_PROTOCOL)
-            #rospy.loginfo('q saved as {}'.format(str(self.q)))
+            # f.write(self.q)
 
     def load(self):
         '''
             If present, leads the interim qvalues and state information 
         '''
         if os.path.isfile(self.qfile) and os.path.getsize(self.qfile) > 0:
+            # with open(self.qfile, mode='rb') as f:
             with open(self.qfile, mode='rb') as f:
                 #self.q = f.read()
                 self.q = pickle.load(f)

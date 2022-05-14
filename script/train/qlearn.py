@@ -40,8 +40,8 @@ class QLearn():
 
         # reading config values from config/qlearn_params.yaml
         epsilon = rospy.get_param('/t3_lazy_couch_potato_v0/epsilon')
-        alpha = rospy.get_param('/t3_lazy_couch_potato_v0/epsilon')
-        gamma = rospy.get_param('/t3_lazy_couch_potato_v0/epsilon')
+        alpha = rospy.get_param('/t3_lazy_couch_potato_v0/alpha')
+        gamma = rospy.get_param('/t3_lazy_couch_potato_v0/gamma')
 
         self.epsilon = epsilon  # exploration constant
         self.alpha = alpha      # discount constant

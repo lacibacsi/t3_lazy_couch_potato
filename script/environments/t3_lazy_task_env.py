@@ -227,13 +227,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
 
             reward += rw2
 
-            self.last_avg = avg
-
-            #obs_distance = self._closest_obstacle()
-            # if obs_distance < 0.3:
-            #    reward -= 0.3
-            # elif obs_distance < 0.6:
-            #    reward -= 0.1
+            self.last_avg = avg            
         else:
             reward = -100
 

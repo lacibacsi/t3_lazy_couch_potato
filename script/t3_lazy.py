@@ -39,6 +39,7 @@ class t3_lazy:
         self.reward_filename = 'episode_reward'
         self.episodefile = os.path.join(self.path, self.reward_filename)
 
+        rospy.loginfo('Creating Gym environment...')
         self.env = gym.make('TurtleBot3LazyCouch-v0')
         rospy.loginfo('Gym environment created')
 

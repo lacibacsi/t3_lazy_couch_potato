@@ -62,11 +62,12 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         self.last_avg = 0.0
 
         # variables to drive different scenarios in reward calculation and even observation space
-        self.init_pos = None
-        self.goal_pos = None
+        self.init_pos = (0, 0)
+        self.goal_pos = (0, 0)
         self.use_goal_distance_in_reward = False
         self.last_distance_to_goal = None
-        self.use_lidar_as_space = False
+        self.use_lidar_as_space = rospy.get_param(
+            '/t3_lazy_couch_potato_v0/use_lidar_as_space')
 
         super(T3LazyTaskEnv, self).__init__()
 
@@ -86,11 +87,12 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         #
         # hence the observation space size is 3x3x3x3 = 81
         # as all 4 variables are discrete with max 3 values, a tuple of 4 discrete space can be set up
-        self.observation_space = spaces.Tuple({'x1': spaces.Discrete(3), 'x2': spaces.Discrete(
-            3), 'x3': spaces.Discrete(3), 'x4': spaces.Discrete(3)})
-
-        # self.observation_space = spaces.Box(
-        #    np.array([0, 0, 0, 0]), np.array([2, 2, 2, 2]), dtype=np.float32)
+        if not self.use_lidar_as_space:
+            self.observation_space = spaces.Tuple({'x1': spaces.Discrete(3), 'x2': spaces.Discrete(
+                3), 'x3': spaces.Discrete(3), 'x4': spaces.Discrete(3)})
+        else:
+            self.observation_space = spaces.Discrete(
+                360)   # returning the full lidar space
 
         # super(T3LazyTaskEnv, self).__init__()
 
@@ -146,7 +148,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
 
             the method additionally returns the average measured distance from the next obstacle for the total width of the lidar scan 
         '''
-        if not use_lidar_as_space:
+        if not self.use_lidar_as_space:
             left3, left2, left1, right1, right2, right3, avg = self._get_distances()
 
             # calculating values for observation space
@@ -188,7 +190,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         '''
             Sets the Robot in its init pose
         '''
-        if self.init_pos is None:
+        if self.init_pos != (0, 0):
             self.move_base(0, 0)
         else:
             self.move_base(self.init_pos[0], self.init_pos[1])
@@ -251,7 +253,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
 
             # 5. add reward if moving closer to the goal
             if self.use_goal_distance_in_reward:
-                distance_to_goal = calculateDistance()                
+                distance_to_goal = self.calculateDistance()
                 if self.last_distance_to_goal is None:
                     if distance_to_goal < self.last_distance_to_goal:
                         reward += 0.1
@@ -266,6 +268,10 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         self.cumulated_steps += 1
 
         return reward
+
+    def calculateDistance(self):
+        # TODO:
+        return 0
 
     def _set_action(self, action):
         '''

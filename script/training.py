@@ -26,14 +26,17 @@ if __name__ == "__main__":
     agent_class_name = rospy.get_param('/t3_lazy_couch_potato_v0/agent_class')
 
     # as close to reflection as it gets
-    module = __import__(agent_name)
-    agent_class = getattr(module, agent_class_name)
+    # commenting out as it's not really working for multiple training algorithms
+    # module = __import__(agent_name)
+    # agent_class = getattr(module, agent_class_name)
 
     # creating the wrapper class
     # TODO: figure out why this does not work in a generic way
     if agent_name == 'qlearn':
+        rospy.logwarn('training is set to qlearn. ')
         robot = t3_lazy(QLearn)
     elif agent_name == 'dqn':
+        rospy.logwarn('training is set to dqn. ')
         robot = t3_lazy(DeepQNetwork)
     else:
         raise ValueError('invalid train config')
@@ -42,4 +45,7 @@ if __name__ == "__main__":
     rospy.logwarn('Gym environment done. ')
     rospy.logwarn('Agent is ' + agent_name)
 
-    robot.run()
+    if agent_name == 'qlearn':
+        robot.run()
+    else:
+        robot.runDQN()

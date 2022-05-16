@@ -56,8 +56,11 @@ class DeepQNetwork:
         self.history_length = rospy.get_param(
             '/t3_lazy_couch_potato_v0/history_length')
 
-        self.__setup__(len(self.actions), len(
-            self.state), self.tensorboard_dir)
+        self.epsilon_min = rospy.get_param(
+            '/t3_lazy_couch_potato_v0/epsilon')
+
+        self.__setup__(len(self.actions),
+                       self.state.n, self.tensorboard_dir)
 
     def __setup__(self, num_actions, state_size, tensorboard_dir, model=None):
         '''
@@ -65,6 +68,8 @@ class DeepQNetwork:
         '''
         self.num_actions = num_actions
         self.state_size = state_size
+
+        self._states = State()
 
         # not using camera in this version
         #self.lidar_to_image = args.lidar_to_image
@@ -180,6 +185,7 @@ class DeepQNetwork:
         '''
             Returns a selected action - either random or the one with the maximum known reward
         '''
+        rospy.loginfo(state)
         if random.random() < epsilon:
             action = random.randrange(len(self.actions))
         else:

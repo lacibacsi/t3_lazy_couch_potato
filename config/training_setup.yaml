@@ -1,3 +1,3 @@
 t3_lazy_couch_potato_v0: #namespace
-  agent_name: dqn #qlearn
-  agent_class: DeepQNetwork #QLearn
+  agent_name: qlearn #dqn
+  agent_class: QLearn #DeepQNetwork 

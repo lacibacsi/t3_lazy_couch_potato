@@ -28,6 +28,7 @@ from gazebo_msgs.srv import SetModelState
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
+from sensor_msgs.msg import Image
 
 from helpers import helper_methods
 
@@ -100,6 +101,7 @@ class T3LazyRobotEnv(robot_gazebo_env.RobotGazeboEnv):
         # subscribe to relevant topics and create cmd_vel publisher
         rospy.Subscriber("/odom", Odometry, self._odom_callback)
         rospy.Subscriber("/scan", LaserScan, self._laser_scan_callback)
+        rospy.Subscriber("/camera/rgb/image_raw", Image, self._camera_callback)
 
         # queue size set to 1 as only the latest message is relevant.
         # If for whatever reason a message is lost, a new one will quicky be sent with an updated value anyway
@@ -194,6 +196,9 @@ class T3LazyRobotEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def _odom_callback(self, data):
         self.odom = data
+
+    def _camera_callback(self, data):
+        self.image = data
 
     def _check_publishers_connection(self):
         '''

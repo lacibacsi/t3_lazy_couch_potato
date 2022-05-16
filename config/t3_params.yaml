@@ -12,3 +12,4 @@ t3_lazy_couch_potato_v0: #namespace
   forwards_reward: 0
   turn_reward: 0
   end_episode_points: 1
+  use_lidar_as_space: False

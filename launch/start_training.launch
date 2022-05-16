@@ -1,7 +1,8 @@
 <launch>
     <rosparam command="load" file="$(find t3_lazy_couch_potato)/config/qlearn_params.yaml" />
+    <rosparam command="load" file="$(find t3_lazy_couch_potato)/config/dqn_params.yaml" />
     <rosparam command="load" file="$(find t3_lazy_couch_potato)/config/t3_params.yaml" />
-    <rosparam command="load" file="$(find t3_lazy_couch_potato)/config/training_setup.yaml" />
+    <rosparam command="load" file="$(find t3_lazy_couch_potato)/config/training_setup.yaml" />    
     <!-- Launch the training system -->
     <node pkg="t3_lazy_couch_potato" name="t3_training" type="training.py" output="screen"/> -->
 </launch>

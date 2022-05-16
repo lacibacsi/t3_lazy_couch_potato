@@ -34,7 +34,7 @@ SWITCH_LEFT_RIGHT_REWARD = -0.8
 LINEAR_SPEED_FWD = 0.15  # 0.08
 ANGULAR_SPEED_FWD = 0.0
 LINEAR_SPEED_TURN = 0.06
-ANGULAR_SPEED_TURN = 0.4
+ANGULAR_SPEED_TURN = 0.7  # 0.4
 
 STATE_STATE_MAX_INDEX = 81 - 1  # TODO: move to param
 STATE_STATE_MIN_INDEX = 1 - 1
@@ -60,6 +60,13 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         self.rate = rospy.Rate(10)  # setting to 10Hz for now
         self.cumulated_steps = 0.0
         self.last_avg = 0.0
+
+        # variables to drive different scenarios in reward calculation and even observation space
+        self.init_pos = None
+        self.goal_pos = None
+        self.use_goal_distance_in_reward = False
+        self.last_distance_to_goal = None
+        self.use_lidar_as_space = False
 
         super(T3LazyTaskEnv, self).__init__()
 
@@ -120,8 +127,9 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
 
     # overwriting robot obs
     def _get_obs(self):
-        '''
+        '''            
             returns the observations by the robot
+            it either returns the lidar scan reads or a specific observation space as
             which is build up by the following method
             there are 4 variables, 2 for obstacle distance and 2 for obstacle position
             x1-x2 (for distance) values set based on how far the obstacle is for left and right side respectively:
@@ -138,46 +146,52 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
 
             the method additionally returns the average measured distance from the next obstacle for the total width of the lidar scan 
         '''
-        left3, left2, left1, right1, right2, right3, avg = self._get_distances()
+        if not use_lidar_as_space:
+            left3, left2, left1, right1, right2, right3, avg = self._get_distances()
 
-        # calculating values for observability space
-        x1 = 2
-        left_min = min([left1, left2, left3])
-        #rospy.logwarn('lefts: {}'.format([left3, left2, left1]))
-        #rospy.logwarn('leftmin: {}'.format(left_min))
+            # calculating values for observation space
+            x1 = 2
+            left_min = min([left1, left2, left3])
+            #rospy.logwarn('lefts: {}'.format([left3, left2, left1]))
+            #rospy.logwarn('leftmin: {}'.format(left_min))
 
-        if (left_min < 0.70):
-            x1 = 1
-            if (left_min < 0.40):
-                x1 = 0
+            if (left_min < 0.70):
+                x1 = 1
+                if (left_min < 0.40):
+                    x1 = 0
 
-        x2 = 2
-        right_min = min([right1, right2, right3])
-        if (right_min < 0.70):
-            x2 = 1
-            if (right_min < 0.40):
-                x2 = 0
+            x2 = 2
+            right_min = min([right1, right2, right3])
+            if (right_min < 0.70):
+                x2 = 1
+                if (right_min < 0.40):
+                    x2 = 0
 
-        x3 = 2
-        if (left_min == left2):
-            x3 = 1
-        elif (left_min == left1):
-            x3 = 0
+            x3 = 2
+            if (left_min == left2):
+                x3 = 1
+            elif (left_min == left1):
+                x3 = 0
 
-        x4 = 2
-        if (right_min == right2):
-            x4 = 1
-        elif (right_min == right1):
-            x4 = 0
+            x4 = 2
+            if (right_min == right2):
+                x4 = 1
+            elif (right_min == right1):
+                x4 = 0
 
-        return (x1, x2, x3, x4, avg)
+            return (x1, x2, x3, x4, avg)
+        else:
+            return self.get_laser_scan()
 
     # virtual methods from robot envrionment
     def _set_init_pose(self):
         '''
             Sets the Robot in its init pose
         '''
-        self.move_base(0, 0)
+        if self.init_pos is None:
+            self.move_base(0, 0)
+        else:
+            self.move_base(self.init_pos[0], self.init_pos[1])
         return True
 
     def _init_env_variables(self):
@@ -199,7 +213,7 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
         # 2. otherwise prefer forward movement
         # 3. add reward / penalty based on x1, x2, x3, x4
         # 4. add reward on whether we're moving away from ostacle
-
+        # 5. optional: add reward if moving closer to the target
         if not done:
             # 2 - prefer forward motion
             if self.last_action == 0:
@@ -211,23 +225,40 @@ class T3LazyTaskEnv(t3_lazy_robot_env.T3LazyRobotEnv):
             # if x1 or x2 is small there is an obstacle close by
             # if x3 or x4 is small the obstacle is close to the left / right
             # each case is penalized by -0.3 / -0.6
-            (x1, x2, x3, x4, avg) = self._get_obs()
-            x_penalty_factor = 0.15
 
-            reward = -x_penalty_factor * (2-x1)
-            reward = -x_penalty_factor * (2-x2)
-            reward = -x_penalty_factor * (2-x3)
-            reward = -x_penalty_factor * (2-x4)
+            # this part is only run if not using the pure lidar readings
+            if not self.use_lidar_as_space:
+                (x1, x2, x3, x4, avg) = self._get_obs()
+                x_penalty_factor = 0.15
 
-            # 4. add reward on whether we're moving away from ostacle
-            if self.last_avg > avg:
-                rw2 = OBSTACLE_CLOSER_REWARD
+                reward = -x_penalty_factor * (2-x1)
+                reward = -x_penalty_factor * (2-x2)
+                reward = -x_penalty_factor * (2-x3)
+                reward = -x_penalty_factor * (2-x4)
+
+                # 4. add reward on whether we're moving away from ostacle
+                if self.last_avg > avg:
+                    rw2 = OBSTACLE_CLOSER_REWARD
+                else:
+                    rw2 = OBSTACLE_FURTHER_REWARD
+
+                reward += rw2
+
             else:
-                rw2 = OBSTACLE_FURTHER_REWARD
+                # using lidar distance, add some reward based on the reading
+                # the higher the obstacle avoidance, the better
+                reward += min(list(self.get_laser_scan())) * 0.05
 
-            reward += rw2
+            # 5. add reward if moving closer to the goal
+            if self.use_goal_distance_in_reward:
+                distance_to_goal = calculateDistance()                
+                if self.last_distance_to_goal is None:
+                    if distance_to_goal < self.last_distance_to_goal:
+                        reward += 0.1
+                else:
+                    self.last_distance_to_goal = distance_to_goal
 
-            self.last_avg = avg            
+            self.last_avg = avg
         else:
             reward = -100
 

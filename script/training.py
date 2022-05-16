@@ -3,6 +3,7 @@
 import rospy
 from t3_lazy import t3_lazy
 from train.qlearn import QLearn
+from train.dqn import DeepQNetwork
 
 if __name__ == "__main__":
 
@@ -28,11 +29,15 @@ if __name__ == "__main__":
     module = __import__(agent_name)
     agent_class = getattr(module, agent_class_name)
 
-    # print(type(agent_class))
-
     # creating the wrapper class
+    # TODO: figure out why this does not work in a generic way
+    if agent_name == 'qlearn':
+        robot = t3_lazy(QLearn)
+    elif agent_name == 'dqn':
+        robot = t3_lazy(DeepQNetwork)
+    else:
+        raise ValueError('invalid train config')
     # robot = t3_lazy(agent_class)
-    robot = t3_lazy(QLearn)
 
     rospy.logwarn('Gym environment done. ')
     rospy.logwarn('Agent is ' + agent_name)

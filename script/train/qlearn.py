@@ -4,6 +4,7 @@ import pickle
 import random
 import os
 import rospy
+import wandb
 #from agent_class import agent_class
 
 
@@ -69,6 +70,13 @@ class QLearn():
         # required by parent
         self.exploration_rate = epsilon
 
+        # logging configs for the training
+        wandb.config = {
+            "epsilon": self.epsilon,
+            "alpha": self.alpha,
+            "gamma": self.gamma
+        }
+
     def getQ(self, state, action):
         return self.q.get(((state), action), 0.0)
 
@@ -130,10 +138,6 @@ class QLearn():
                     reward      - reward received based on last state and performed action
                     next state  - new state space index
         '''
-        #rospy.loginfo('learn called, last state: {}'.format(last_state))
-        #rospy.loginfo('learn called, next state: {}'.format(next_state))
-        #rospy.loginfo('learn called, action: {}'.format(action))
-        #rospy.loginfo('learn called, next state: {}'.format(reward))
 
         return self._learn(last_state, action, reward, next_state)
 
